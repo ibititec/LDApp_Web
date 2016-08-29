@@ -234,6 +234,9 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="docs\transporte.csv" />
+    <Content Include="docs\HorariosOnibus.csv" />
+    <Content Include="docs\UtilidadePublica.csv" />
     <None Include="Properties\PublishProfiles\FTP_LDApp.pubxml" />
     <None Include="Properties\PublishProfiles\publhis.pubxml" />
     <None Include="Properties\PublishProfiles\publish.pubxml" />
@@ -314,6 +317,9 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>docs\transporte.csv</ApplicationManifest>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

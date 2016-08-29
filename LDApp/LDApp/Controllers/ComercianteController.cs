@@ -34,7 +34,7 @@ namespace LDApp.Controllers
 
                 foreach (Comerciante comerciante in comerciantes)
                 {
-                    comerciante.NomeFoto = @Url.Content("~/images/upload/") + comerciante.NomeFoto;
+                    comerciante.NomeFoto = comerciante.NomeFoto;
                     comerciante.Nome = comerciante.Nome.ToUpper();
                 }
                 //Necessario converter o Json Serialize devido ao proxy do EntityFramework
@@ -248,7 +248,9 @@ namespace LDApp.Controllers
                         string[] vars = line.Split(',');
                         Comerciante comerciante = new Comerciante();
                         comerciante.ComercianteId = Guid.NewGuid();
-
+                        comerciante.Nome = vars[0];
+                        comerciante.NomeFoto = comerciante.Nome.Replace(' ','_');
+                        
                         ICollection<Telefone> telefones = new List<Telefone>();
                         Telefone telefone1 = new Telefone();
                         telefone1.TelefoneId = Guid.NewGuid();
@@ -259,7 +261,7 @@ namespace LDApp.Controllers
                         Telefone telefone4 = new Telefone();
                         telefone4.TelefoneId = Guid.NewGuid();
 
-                        comerciante.Nome = vars[0];
+                      
                         String descricacaoComercio = vars[8];
                         IEnumerable<TipoComercio> tipoComercios = db.TipoComercios.Where(a => a.Descricao == descricacaoComercio);
                         if (tipoComercios.Count() >= 1)
@@ -285,7 +287,7 @@ namespace LDApp.Controllers
 
                         if (!vars[1].Equals(""))
                         {
-                            telefone1.Descricao = vars[1];
+                            telefone1.Numero = vars[1];
                             if (!vars[9].Equals(""))
                             {
                                 telefone1.Descricao = vars[9];
@@ -333,8 +335,6 @@ namespace LDApp.Controllers
                         endereco.Latitude = vars[10];
                         db.Enderecos.Add(endereco);
                         db.SaveChanges();
-
-
                     }
                     CsvReader.Close();
                 }
@@ -347,6 +347,34 @@ namespace LDApp.Controllers
             }
         }
 
+        // GET: /Comerciante/Create
+        public String GetTransporte()
+        {
+            try
+            {
+                String line = "";
+                List<UtilidadePublica> utilidades = new List<UtilidadePublica>();
+                using (StreamReader CsvReader = new StreamReader(Server.MapPath("/docs/transporte.csv"), Encoding.Default, true))
+                {
+                    while ((line = CsvReader.ReadLine()) != null)
+                    {
+                        string[] vars = line.Split(',');
+                            UtilidadePublica utilidade = new UtilidadePublica();
+                            utilidade.Descricao = vars[0];
+                            utilidade.Telefone = vars[1];
+                            utilidades.Add(utilidade);
+                    }
+                    CsvReader.Close();
+                    return JsonConvert.SerializeObject(utilidades, Formatting.Indented);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                return null;
+            }
+        }
+        
         // GET: /Comerciante/Create
         public String GetUtilidadePublica(String Tipo)
         {
@@ -403,7 +431,7 @@ namespace LDApp.Controllers
 
         public String GetTelefoneTransporte()
         {
-            return GetUtilidadePublica("TRANSORTE");
+            return GetUtilidadePublica("TRANSPORTE");
         }
 
         // GET: /Comerciante/Create
@@ -449,12 +477,12 @@ namespace LDApp.Controllers
         {
             return GetHorarioOnibus("VIMARA");
         }
+
         public String GetSertaneja()
         {
             return GetHorarioOnibus("SERTANEJA");
         }
-
-
+    
         // POST: /Comerciante/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
